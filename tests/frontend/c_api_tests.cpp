@@ -384,6 +384,7 @@ int main() {
     forge_function_destroy(slice_identity);
     forge_block_destroy(array_entry);
     forge_function_destroy(array_identity);
+    forge_block_destroy(dynamic_pair_entry);
     forge_function_destroy(dynamic_pair);
     forge_block_destroy(aggregate_entry);
     forge_function_destroy(aggregate_identity);

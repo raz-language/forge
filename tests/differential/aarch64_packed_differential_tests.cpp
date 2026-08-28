@@ -79,10 +79,13 @@ std::string build_fixture(const std::string& name, std::size_t lanes, std::size_
     out += "  func @" + name + "(";
     if (opaque_destination) out += "%dst: ptr";
     out += ") -> i32 {\n  entry:\n";
-    std::int32_t seed = 12345;
-    const auto next = [&]() {
-        seed = seed * 1103515245 + 12345;
-        return (seed >> 8) % 5000 - 2500;
+    std::uint32_t seed = 12345U;
+    const auto next = [&]() -> std::int32_t {
+        // This is intentionally a wrapping 32-bit LCG. Unsigned arithmetic
+        // makes the wraparound defined so UBSan tests the backend rather than
+        // tripping over undefined behavior in the fixture generator itself.
+        seed = seed * 1103515245U + 12345U;
+        return static_cast<std::int32_t>((seed >> 8U) % 5000U) - 2500;
     };
     for (std::size_t source = 0; source < sources; ++source) {
         const auto base = "%s" + std::to_string(source) + "base";
